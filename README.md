@@ -26,7 +26,8 @@ Note that using this template is subject to the conditions of this [License Agre
 Please review the terms of the license before downloading and using this template. In short, you are allowed to use the template for free with Mule ESB Enterprise Edition, CloudHub, or as a trial in Anypoint Studio.
 
 # Use Case <a name="usecase"/>
-I want to syncronize Employees between Workday and Salesfoce.
+I want to synchronize worker termination between Workday and Salesfoce. 
+This Template should serve as a foundation for setting an online sync of worker termination from Workday instance to Salesforce. Everytime there is a new worker termination, the integration will poll for changes in Workday source instance and it will be responsible for deactivating the User(if exists) on the target Salesforce instance.
 
 # Considerations <a name="considerations"/>
 
@@ -62,7 +63,7 @@ In order to have this template working as expected, you should be aware of your 
 
 ### As destination of data
 
-There are no particular considerations for this Anypoint Template regarding Siebel as data destination.
+There are no particular considerations for this Anypoint Template regarding Salesforce as data destination.
 
 
 ## Workday Considerations <a name="workdayconsiderations"/>
@@ -71,12 +72,13 @@ There are no particular considerations for this Anypoint Template regarding Sieb
 
 There are no particular considerations for this Anypoint Template regarding Workday as data origin.
 
+
 # Run it! <a name="runit"/>
 Simple steps to get Workday to Salesforce Terminate Worker Broadcast running.
 
 
 ## Running on premise <a name="runonopremise"/>
-In this section we detail the way you have to run you Anypoint Temple on you computer.
+In this section we detail the way you should run your Anypoint Template on your computer.
 
 
 ### Where to Download Mule Studio and Mule ESB
@@ -108,7 +110,7 @@ Once you have imported you Anypoint Template into Anypoint Studio you need to fo
 
 
 ### Running on Mule ESB stand alone <a name="runonmuleesbstandalone"/>
-Complete all properties in one of the property files, for example in [mule.prod.properties] (../blob/master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`. 
+Complete all properties in one of the property files, for example in [mule.prod.properties] (../master/src/main/resources/mule.prod.properties) and run your app with the corresponding environment variable to use it. To follow the example, this will be `mule.env=prod`. 
 
 
 ## Running on CloudHub <a name="runoncloudhub"/>
@@ -136,11 +138,6 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + sfdc.password `secret`
 + sfdc.securityToken `1234fdkfdkso20kw2sd`
 + sfdc.url `https://login.salesforce.com/services/Soap/u/28.0`
-
-+ sfdc.localeSidKey `en_US`
-+ sfdc.languageLocaleKey `en_US`
-+ sfdc.timeZoneSidKey `America/New_York`
-+ sfdc.emailEncodingKey `ISO-8859-1`
 
 # API Calls <a name="apicalls"/>
 Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. The Anypoint Template calls to the API can be calculated using the formula:
@@ -177,18 +174,19 @@ In the visual editor they can be found on the *Global Element* tab.
 Functional aspect of the Anypoint Template is implemented on this XML, directed by a batch job that will be responsible for creations/updates. The severeal message processors constitute four high level actions that fully implement the logic of this Anypoint Template:
 
 1. Job execution is invoked from triggerFlow (endpoints.xml) everytime there is a new query executed asking for created/updated Workers.
-2. During the Process stage, each Workers will be filtered depending on, if it has an existing matching User in the Salesforce.
+2. During the Process stage, each Workers will be filtered depending on worker termination criteria and if it has an existing matching User in the Salesforce.
 3. The last step of the Process stage will group the Users and create/update them in Salesforce. Finally during the On Complete stage the Anypoint Template will log output statistics data into the console.
 
 
 
 ## endpoints.xml<a name="endpointsxml"/>
-This is file is conformed by a Flow containing the Poll that will periodically query Sales Force for updated/created Contacts that meet the defined criteria in the query. And then executing the batch job process with the query results.
+This is file is conformed by a Flow containing the endpoints for triggering the template and retrieving the objects that meet the defined criteria in the query. And then executing the batch job process with the query results.
 
 
 
 ## errorHandling.xml<a name="errorhandlingxml"/>
-Contains a [Catch Exception Strategy](http://www.mulesoft.org/documentation/display/current/Catch+Exception+Strategy) that is only Logging the exception thrown (If so). As you imagine, this is the right place to handle how your integration will react depending on the different exceptions.
+This is the right place to handle how your integration will react depending on the different exceptions. 
+This file holds a [Choice Exception Strategy](http://www.mulesoft.org/documentation/display/current/Choice+Exception+Strategy) that is referenced by the main flow in the business logic.
 
 
 

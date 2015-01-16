@@ -6,7 +6,8 @@
 	<sections>
 		<section id="use_case">
 			<![CDATA[
-I want to syncronize Employees between Workday and Salesfoce.
+I want to synchronize worker termination between Workday and Salesfoce. 
+This Template should serve as a foundation for setting an online sync of worker termination from Workday instance to Salesforce. Everytime there is a new worker termination, the integration will poll for changes in Workday source instance and it will be responsible for deactivating the User(if exists) on the target Salesforce instance.
 ]]>
 		</section>
 		<section id="considerations">
@@ -35,11 +36,6 @@ To make this Anypoint Template run, there are certain preconditions that must be
 + sfdc.password `secret`
 + sfdc.securityToken `1234fdkfdkso20kw2sd`
 + sfdc.url `https://login.salesforce.com/services/Soap/u/28.0`
-
-+ sfdc.localeSidKey `en_US`
-+ sfdc.languageLocaleKey `en_US`
-+ sfdc.timeZoneSidKey `America/New_York`
-+ sfdc.emailEncodingKey `ISO-8859-1`
 ]]>
 		</section>
 		<section id="api_calls">
@@ -60,7 +56,7 @@ For instance if 10 records are fetched from origin instance, then 12 api calls w
 Functional aspect of the Anypoint Template is implemented on this XML, directed by a batch job that will be responsible for creations/updates. The severeal message processors constitute four high level actions that fully implement the logic of this Anypoint Template:
 
 1. Job execution is invoked from triggerFlow (endpoints.xml) everytime there is a new query executed asking for created/updated Workers.
-2. During the Process stage, each Workers will be filtered depending on, if it has an existing matching User in the Salesforce.
+2. During the Process stage, each Workers will be filtered depending on worker termination criteria and if it has an existing matching User in the Salesforce.
 3. The last step of the Process stage will group the Users and create/update them in Salesforce. Finally during the On Complete stage the Anypoint Template will log output statistics data into the console.
 ]]>
 		</section>
