@@ -25,7 +25,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
 
 			</batch:step>
 			<batch:step name="foreachDeactivateUserInSalesforce" accept-expression="!(payload is NullPayload)">
-				<expression-component doc:name="set ID for deactivation"><![CDATA[payload.put('IsActive', Boolean.FALSE);
+				<expression-component doc:name="set deactivation flag for User"><![CDATA[payload.put('IsActive', Boolean.FALSE);
 ]]></expression-component>
 				<batch:commit size="200" doc:name="Batch Commit">
                     <logger message="Users to deactivate: #[payload]" level="INFO" doc:name="log Users to deactivate"/>
