@@ -24,11 +24,11 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 			<watermark variable="lastQueryDate" default-expression="${watermark.default.expression}" update-expression="#[ new java.util.Date() ]" />
 			<processor-chain doc:name="query Workers and set collection">
 				<logger message="Fetching Workday Employees to deactivate... #[lastQueryDate]" level="INFO" doc:name="log 'Fetching workday to deactivate...'"/>
-				<wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="get Employees from Workday Human Resource" workersRequest-ref="#[org.mule.kicks.TerminatedEmployeeRequest.create(lastQueryDate, ${poll.frequencyMillis})]"></wd-hr:get-workers>
+				<wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="get Employees from Workday Human Resource" workersRequest-ref="#[org.mule.templates.TerminatedEmployeeRequest.create(lastQueryDate, ${poll.frequencyMillis})]"></wd-hr:get-workers>
                 <data-mapper:transform config-ref="transform_Workday_workers_for_deactivation" doc:name="transform Workday employees to map of values for deactivation in Salesforce"/>
 			</processor-chain>
 		</poll>
-        <custom-filter doc:name="Custom component to filter duplicate workers" class="org.mule.kicks.WorkersDeduplicationFilter"/>
+        <custom-filter doc:name="Custom component to filter duplicate workers" class="org.mule.templates.WorkersDeduplicationFilter"/>
         <flow-ref name="deactiviationFlow" doc:description="deactiviationFlow"  doc:name="deactiviationFlow"/>
     </flow>
 </mule>

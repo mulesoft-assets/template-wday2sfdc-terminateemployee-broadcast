@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/wd-hr http://www.mulesoft.org/schema/mule/wd
 
     <sub-flow name="queryWorkdayEmployeeFlow" doc:name="queryWorkdayEmployeeFlow">
         <processor-chain doc:name="Processor Chain">
-            <wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="Workday Human Resource" workersRequest-ref="#[org.mule.kicks.TerminatedEmployeeRequest.create(payload, ${poll.frequencyMillis})]"/>
+            <wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="Workday Human Resource" workersRequest-ref="#[org.mule.templates.TerminatedEmployeeRequest.create(payload, ${poll.frequencyMillis})]"/>
         </processor-chain>
     </sub-flow>
 </mule>
