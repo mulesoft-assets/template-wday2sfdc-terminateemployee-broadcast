@@ -36,7 +36,7 @@ To make this Anypoint Template run, there are certain preconditions that must be
 1. **Users cannot be deleted in SalesForce:** For now, the only thing to do regarding users removal is disabling/deactivating them, but this won't make the username available for a new user.
 2. **Each user needs to be associated to a Profile:** SalesForce's profiles are what define the permissions the user will have for manipulating data and other users. Each SalesForce account has its own profiles.
 3. **Working with sandboxes for the same account**: Although each sandbox should be a completely different environment, Usernames cannot be repeated in different sandboxes, i.e. if you have a user with username *bob.dylan* in *sandbox A*, you will not be able to create another user with username *bob.dylan* in *sandbox B*.
-4. **Workday email uniqueness**: The email can be repeated for two or more accounts (or missing). Therefore Workday accounts with duplicate emails will be removed from processing in the Input stage.
+4. **Workday e-mail uniqueness**: The e-mail can be repeated for two or more accounts (or missing). Therefore Workday accounts with duplicate e-mails will be removed from processing in the Input stage.
 
 
 
@@ -71,6 +71,10 @@ There are no particular considerations for this Anypoint Template regarding Sale
 ### As source of data
 
 There are no particular considerations for this Anypoint Template regarding Workday as data origin.
+
+
+
+
 
 
 # Run it! <a name="runit"/>
@@ -124,7 +128,7 @@ Mule Studio provides you with really easy way to deploy your Template directly t
 ## Properties to be configured (With examples) <a name="propertiestobeconfigured"/>
 In order to use this Mule Anypoint Template you need to configure properties (Credentials, configurations, etc.) either in properties file or in CloudHub as Environment Variables. Detail list with examples:
 ### Application configuration
-+ poll.frequency `60000`
++ poll.frequencyMillis `60000`
 + poll.startDelayMillis `1000`
 + watermark.default.expression `YESTERDAY`
 
@@ -137,18 +141,18 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 + sfdc.username `user@company.com`
 + sfdc.password `secret`
 + sfdc.securityToken `1234fdkfdkso20kw2sd`
-+ sfdc.url `https://login.salesforce.com/services/Soap/u/28.0`
++ sfdc.url `https://login.salesforce.com/services/Soap/u/32.0`
 
 # API Calls <a name="apicalls"/>
 Salesforce imposes limits on the number of API Calls that can be made. Therefore calculating this amount may be an important factor to consider. The Anypoint Template calls to the API can be calculated using the formula:
 
-***1 + X + X / 200***
+***X + X / 200***
 
 Being ***X*** the number of Users to be synchronized on each run. 
 
 The division by ***200*** is because, by default, Users are gathered in groups of 200 for each Upsert API Call in the commit step. Also consider that this calls are executed repeatedly every polling cycle.	
 
-For instance if 10 records are fetched from origin instance, then 12 api calls will be made (1 + 10 + 1).
+For instance if 10 records are fetched from origin instance, then 11 api calls will be made (10 + 1).
 
 
 # Customize It!<a name="customizeit"/>
@@ -171,7 +175,7 @@ In the visual editor they can be found on the *Global Element* tab.
 
 
 ## businessLogic.xml<a name="businesslogicxml"/>
-Functional aspect of the Anypoint Template is implemented on this XML, directed by a batch job that will be responsible for creations/updates. The severeal message processors constitute four high level actions that fully implement the logic of this Anypoint Template:
+Functional aspect of the Anypoint Template is implemented in this XML, directed by a batch job that will be responsible for creations/updates. The severeal message processors constitute four high level actions that fully implement the logic of this Anypoint Template:
 
 1. Job execution is invoked from triggerFlow (endpoints.xml) everytime there is a new query executed asking for created/updated Employees.
 2. During the Process stage, each Employee will be filtered depending on employee termination criteria and if it has an existing matching User in the Salesforce.

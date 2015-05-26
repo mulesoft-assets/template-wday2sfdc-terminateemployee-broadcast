@@ -6,8 +6,13 @@
 
 package org.mule.templates.integration;
 
-import com.workday.hr.GetWorkersResponseType;
-import com.workday.hr.WorkerType;
+import static org.junit.Assert.assertFalse;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -17,13 +22,9 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.processor.chain.InterceptingChainLifecycleWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertFalse;
+import com.workday.hr.GetWorkersResponseType;
+import com.workday.hr.WorkerType;
 
 /**
  * The objective of this class is to validate the correct behavior of the flows
@@ -31,7 +32,7 @@ import static org.junit.Assert.assertFalse;
  */
 public class TerminatedEmployeeQueryIT extends AbstractTemplateTestCase {
 
-    private static final Logger log = LoggerFactory.getLogger(TerminatedEmployeeQueryIT.class);
+    private static final Logger log = LogManager.getLogger(TerminatedEmployeeQueryIT.class);
 
     private InterceptingChainLifecycleWrapper queryEmployeeFromWorkdayFlow;
 
