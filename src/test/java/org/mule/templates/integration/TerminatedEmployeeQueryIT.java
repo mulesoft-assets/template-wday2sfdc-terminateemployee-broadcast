@@ -8,6 +8,7 @@ package org.mule.templates.integration;
 
 import static org.junit.Assert.assertFalse;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +44,18 @@ public class TerminatedEmployeeQueryIT extends AbstractTemplateTestCase {
 
         // Set default water-mark expression to current time
         System.clearProperty("watermark.default.expression");
-        System.setProperty("watermark.default.expression", "#[groovy: new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 168)]");
+        Date initialDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 168);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(initialDate);
+        System.setProperty(
+        		"watermark.default.expression", 
+        		"#[groovy: new GregorianCalendar("
+        				+ cal.get(Calendar.YEAR) + ","
+        				+ cal.get(Calendar.MONTH) + ","
+        				+ cal.get(Calendar.DAY_OF_MONTH) + ","
+        				+ cal.get(Calendar.HOUR) + ","
+        				+ cal.get(Calendar.MINUTE) + ","
+        				+ cal.get(Calendar.SECOND) + ") ]");
     }
 
     @Before
@@ -69,8 +81,11 @@ public class TerminatedEmployeeQueryIT extends AbstractTemplateTestCase {
     @Test
     public void testMainFlow() throws Exception {
 
-        Date date = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 168));
-        GetWorkersResponseType response = (GetWorkersResponseType) queryWorkdayEmployee(queryEmployeeFromWorkdayFlow, date);
+    	Date date = new Date(System.currentTimeMillis() - (1000 * 60 * 60 * 168));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+         
+        GetWorkersResponseType response = (GetWorkersResponseType) queryWorkdayEmployee(queryEmployeeFromWorkdayFlow, cal);
 
         if (response.getResponseData() != null) {
             List<WorkerType> workers = response.getResponseData().getWorker();
@@ -79,7 +94,7 @@ public class TerminatedEmployeeQueryIT extends AbstractTemplateTestCase {
         }
     }
 
-    private Object queryWorkdayEmployee(InterceptingChainLifecycleWrapper flow, Date date)
+    private Object queryWorkdayEmployee(InterceptingChainLifecycleWrapper flow, Calendar date)
             throws MuleException, Exception {
 
         MuleMessage message = flow.process(getTestEvent(date, MessageExchangePattern.REQUEST_RESPONSE)).getMessage();

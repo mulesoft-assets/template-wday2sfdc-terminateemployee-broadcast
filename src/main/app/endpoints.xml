@@ -22,17 +22,23 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 
 	<!-- 	In this file you should declare all your inbound endpoints and from here control the access to your application -->
 
-	<flow name="triggerDeactiviationFlow" processingStrategy="synchronous" doc:name="triggerDeactiviationFlow">
+	<flow name="triggerDeactiviationFlow" processingStrategy="synchronous" >
 		<poll doc:name="fireup Worker synchronization">
 			<fixed-frequency-scheduler frequency="${poll.frequencyMillis}" startDelay="${poll.startDelayMillis}" />
-			<watermark variable="lastQueryDate" default-expression="${watermark.default.expression}" update-expression="#[ new java.util.Date() ]" />
+			<watermark variable="lastQueryDate" default-expression="${watermark.default.expression}" selector="MAX" selector-expression="#[payload.LastModifiedDate]"/>
 			<processor-chain doc:name="query Workers and set collection">
-				<logger message="Fetching Workday Employees to deactivate... #[lastQueryDate]" level="INFO" doc:name="log 'Fetching workday to deactivate...'"/>
-				<wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="get Employees from Workday Human Resource" workersRequest-ref="#[org.mule.templates.TerminatedEmployeeRequest.create(lastQueryDate, ${poll.frequencyMillis})]"></wd-hr:get-workers>
-                <data-mapper:transform config-ref="transform_Workday_workers_for_deactivation" doc:name="transform Workday employees to map of values for deactivation in Salesforce"/>
+				<logger message="Fetching Workday with watermark: #[new java.text.SimpleDateFormat(&quot;yyyy/dd/MM HH:mm:ss.SSS&quot;).format(lastQueryDate.getTime())]" level="INFO" doc:name="log 'Fetching workday to deactivate...'"/>
+				<wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="get Employees from Workday Human Resource" workersRequest-ref="#[org.mule.templates.TerminatedEmployeeRequest.create(lastQueryDate)]"></wd-hr:get-workers>
+                <data-mapper:transform config-ref="transform_Workday_workers_for_deactivation" doc:name="transform Workday employees to map of values for deactivation in Salesforce">
+                    <data-mapper:input-arguments>
+                        <data-mapper:input-argument key="UpdatedThrough">#[payload.getRequestCriteria().getTransactionLogCriteriaData()[0].getTransactionDateRangeData().getUpdatedThrough()]</data-mapper:input-argument>
+                    </data-mapper:input-arguments>
+                </data-mapper:transform>
 			</processor-chain>
 		</poll>
-        <custom-filter doc:name="Custom component to filter duplicate workers" class="org.mule.templates.WorkersDeduplicationFilter"/>
-        <flow-ref name="deactiviationFlow" doc:description="deactiviationFlow"  doc:name="deactiviationFlow"/>
+        <expression-filter expression="#[payload.size() &gt; 0]" doc:name="Filter empty result set"/>
+        <custom-transformer class="org.mule.templates.FilterDuplicateEmployeesTransformer" doc:name="Filter duplicate employees"/>
+
+        <flow-ref name="mainFlow" doc:description="deactiviationFlow"  doc:name="mainFlow"/>
     </flow>
 </mule>

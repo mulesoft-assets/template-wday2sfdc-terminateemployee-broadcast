@@ -47,7 +47,7 @@ http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schem
 		</batch:on-complete>
 	</batch:job>
 
-    <flow name="deactiviationFlow" doc:name="deactiviationFlow">
+    <flow name="mainFlow" >
         <batch:execute name="deactiviateUserBatch" doc:name="trigger deactiviateUserBatch"/>
         <exception-strategy ref="defaultChoiceExceptionStrategy" doc:name="catch Exception and call defaultExceptionStrategy"/>
     </flow>

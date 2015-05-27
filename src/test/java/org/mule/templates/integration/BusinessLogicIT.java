@@ -6,7 +6,11 @@
 
 package org.mule.templates.integration;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import com.mulesoft.module.batch.BatchTestHelper;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,7 +30,18 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
     public static void beforeTestClass() {
         System.setProperty("poll.startDelayMillis", "8000");
         System.setProperty("poll.frequencyMillis", "30000");
-        System.setProperty("watermark.default.expression", "#[groovy: new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 168)]");
+        Date initialDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 168);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(initialDate);
+        System.setProperty(
+        		"watermark.default.expression", 
+        		"#[groovy: new GregorianCalendar("
+        				+ cal.get(Calendar.YEAR) + ","
+        				+ cal.get(Calendar.MONTH) + ","
+        				+ cal.get(Calendar.DAY_OF_MONTH) + ","
+        				+ cal.get(Calendar.HOUR) + ","
+        				+ cal.get(Calendar.MINUTE) + ","
+        				+ cal.get(Calendar.SECOND) + ") ]");
     }
 
     @Before

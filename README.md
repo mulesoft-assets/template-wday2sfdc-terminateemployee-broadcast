@@ -130,7 +130,7 @@ In order to use this Mule Anypoint Template you need to configure properties (Cr
 ### Application configuration
 + poll.frequencyMillis `60000`
 + poll.startDelayMillis `1000`
-+ watermark.default.expression `YESTERDAY`
++ watermark.default.expression `#[groovy: new GregorianCalendar(2015, Calendar.MAY, 18, 17, 00, 00)]` //(YEAR, MONTH, DAY, HOUR, MINUTE, SECOND) 
 
 #### Workday Connector configuration
 + wday.user `admin@workday`
