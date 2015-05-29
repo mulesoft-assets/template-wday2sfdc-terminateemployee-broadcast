@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" 
-	xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+<mule xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
 	xmlns:json="http://www.mulesoft.org/schema/mule/json"
-	xmlns:wd-hr="http://www.mulesoft.org/schema/mule/wd-hr" 
 	xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" 
 	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
     xmlns="http://www.mulesoft.org/schema/mule/core"
@@ -16,9 +14,7 @@ http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/jso
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/2.0/mule-tracking-ee.xsd
-http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
-http://www.mulesoft.org/schema/mule/wd-hr http://www.mulesoft.org/schema/mule/wd-hr/current/mule-wd-hr.xsd
-http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd">
+http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd">
 
 	<batch:job name="deactiviateUserBatch">
 		<batch:threading-profile poolExhaustedAction="WAIT" />

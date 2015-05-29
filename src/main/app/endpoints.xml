@@ -4,7 +4,6 @@
 	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" 
 	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" 
 	xmlns:wd-hr="http://www.mulesoft.org/schema/mule/wd-hr" 
-	xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" 
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
     xmlns="http://www.mulesoft.org/schema/mule/core"
     xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
@@ -15,7 +14,6 @@
 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/sfdc http://www.mulesoft.org/schema/mule/sfdc/current/mule-sfdc.xsd
 http://www.mulesoft.org/schema/mule/wd-hr http://www.mulesoft.org/schema/mule/wd-hr/current/mule-wd-hr.xsd
 http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
 http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
