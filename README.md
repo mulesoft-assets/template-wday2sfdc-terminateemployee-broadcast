@@ -36,7 +36,7 @@ To make this Anypoint Template run, there are certain preconditions that must be
 1. **Users cannot be deleted in SalesForce:** For now, the only thing to do regarding users removal is disabling/deactivating them, but this won't make the username available for a new user.
 2. **Each user needs to be associated to a Profile:** SalesForce's profiles are what define the permissions the user will have for manipulating data and other users. Each SalesForce account has its own profiles.
 3. **Working with sandboxes for the same account**: Although each sandbox should be a completely different environment, Usernames cannot be repeated in different sandboxes, i.e. if you have a user with username *bob.dylan* in *sandbox A*, you will not be able to create another user with username *bob.dylan* in *sandbox B*.
-4. **Workday e-mail uniqueness**: The e-mail can be repeated for two or more accounts (or missing). Therefore Workday accounts with duplicate e-mails will be removed from processing in the Input stage.
+4. **Workday e-mail uniqueness**: The e-mail can be repeated for two or more accounts (or missing). The template requires email uniqueness for the accounts.
 
 
 
