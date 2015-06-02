@@ -35,7 +35,7 @@ http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/m
 			</processor-chain>
 		</poll>
         <expression-filter expression="#[payload.size() &gt; 0]" doc:name="Filter empty result set"/>
-        <custom-transformer class="org.mule.templates.FilterDuplicateEmployeesTransformer" doc:name="Filter duplicate employees"/>
+
 
         <flow-ref name="mainFlow" doc:description="deactiviationFlow"  doc:name="mainFlow"/>
     </flow>
