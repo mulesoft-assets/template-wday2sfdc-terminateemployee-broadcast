@@ -1,18 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:wd-hr="http://www.mulesoft.org/schema/mule/wd-hr" 
+<mule xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:wd-hr="http://www.mulesoft.org/schema/mule/wd-hr" 
 	xmlns="http://www.mulesoft.org/schema/mule/core" 
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:spring="http://www.springframework.org/schema/beans" 
-	version="EE-3.6.2"
+	version="EE-3.7.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/wd-hr http://www.mulesoft.org/schema/mule/wd-hr/current/mule-wd-hr.xsd">
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/wd-hr http://www.mulesoft.org/schema/mule/wd-hr/current/mule-wd-hr.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
 
     <sub-flow name="queryWorkdayEmployeeFlow" >
         <processor-chain doc:name="Processor Chain">
-            <wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="Workday Human Resource" workersRequest-ref="#[org.mule.templates.TerminatedEmployeeRequest.create(payload)]"/>
+            <dw:transform-message doc:name="Create GetWorkers Request">
+                <dw:set-payload><![CDATA[%dw 1.0 
+%output application/java 
+--- 
+{ 
+	requestCriteria: { 
+		excludeInactiveWorkers: false, 
+		excludeContingentWorkers: true, 
+		excludeEmployees: false, 
+		transactionLogCriteriaData: [ { 
+			transactionTypeReferences:{ 
+				transactionTypeReference: [ { 
+					ID: [ { 
+						type: "Business_Process_Type", 
+						value: "Terminate Employee"
+					} ]
+				} ]
+			}, 
+			transactionDateRangeData: { 
+				updatedFrom: payload, 
+				updatedThrough: now - |PT6S|
+			}
+		} ]
+	}
+} as :object {class: "com.workday.hr.GetWorkersRequestType"}]]></dw:set-payload>
+            </dw:transform-message>
+            <wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="Workday Human Resource" />
         </processor-chain>
     </sub-flow>
 </mule>

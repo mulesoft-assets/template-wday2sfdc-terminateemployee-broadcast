@@ -1,42 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml"
-	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" 
-	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" 
-	xmlns:wd-hr="http://www.mulesoft.org/schema/mule/wd-hr" 
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-    xmlns="http://www.mulesoft.org/schema/mule/core"
-    xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-    xmlns:spring="http://www.springframework.org/schema/beans"
-    version="EE-3.6.2"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
-http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+<mule xmlns:metadata="http://www.mulesoft.org/schema/mule/metadata" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:wd-hr="http://www.mulesoft.org/schema/mule/wd-hr" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.7.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
 http://www.mulesoft.org/schema/mule/wd-hr http://www.mulesoft.org/schema/mule/wd-hr/current/mule-wd-hr.xsd
-http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
-http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd">
 
-	<!-- 	In this file you should declare all your inbound endpoints and from here control the access to your application -->
+	<!-- In this file you should declare all your inbound endpoints and from here control the access to your application -->
 
-	<flow name="triggerDeactiviationFlow" processingStrategy="synchronous" >
+	<flow processingStrategy="synchronous" name="triggerDeactiviationFlow">
 		<poll doc:name="fireup Worker synchronization">
-			<fixed-frequency-scheduler frequency="${poll.frequencyMillis}" startDelay="${poll.startDelayMillis}" />
-			<watermark variable="lastQueryDate" default-expression="${watermark.default.expression}" selector="MAX" selector-expression="#[payload.LastModifiedDate]"/>
+			<fixed-frequency-scheduler startDelay="${poll.startDelayMillis}" frequency="${poll.frequencyMillis}" />
+			<watermark update-expression="#[flowVars.updatedThrough]" default-expression="${watermark.default.expression}" variable="lastQueryDate" />
 			<processor-chain doc:name="query Workers and set collection">
-				<logger message="Fetching Workday with watermark: #[new java.text.SimpleDateFormat(&quot;yyyy/dd/MM HH:mm:ss.SSS&quot;).format(lastQueryDate.getTime())]" level="INFO" doc:name="log 'Fetching workday to deactivate...'"/>
-				<wd-hr:get-workers config-ref="WorkdayHumanResource" doc:name="get Employees from Workday Human Resource" workersRequest-ref="#[org.mule.templates.TerminatedEmployeeRequest.create(lastQueryDate)]"></wd-hr:get-workers>
-                <data-mapper:transform config-ref="transform_Workday_workers_for_deactivation" doc:name="transform Workday employees to map of values for deactivation in Salesforce">
-                    <data-mapper:input-arguments>
-                        <data-mapper:input-argument key="UpdatedThrough">#[payload.getRequestCriteria().getTransactionLogCriteriaData()[0].getTransactionDateRangeData().getUpdatedThrough()]</data-mapper:input-argument>
-                    </data-mapper:input-arguments>
-                </data-mapper:transform>
+                <logger doc:name="Log 'Fetching workday to deactivate...'" level="INFO" message="Fetching Workday with watermark: #[groovy: lastQueryDate.format(&quot;yyyy-MM-dd'T'HH:mm:ss.SSS&quot;)]"/>
+				
+				<dw:transform-message doc:name="Create GetWorkers Request">
+					<dw:set-payload>
+						<![CDATA[%dw 1.0 
+%output application/java 
+--- 
+{ 
+	requestCriteria: { 
+		excludeInactiveWorkers: false, 
+		excludeContingentWorkers: true, 
+		excludeEmployees: false, 
+		transactionLogCriteriaData: [ { 
+			transactionTypeReferences:{ 
+				transactionTypeReference: [ { 
+					ID: [ { 
+						type: "Business_Process_Type", 
+						value: "Terminate Employee"
+					} ]
+				} ]
+			}, 
+			transactionDateRangeData: { 
+				updatedFrom: flowVars.lastQueryDate, 
+				updatedThrough: now - |PT6S|
+			}
+		} ]
+	}
+} as :object {class: "com.workday.hr.GetWorkersRequestType"} ]]>
+					</dw:set-payload>
+				</dw:transform-message>
+
+
+
+				<wd-hr:get-workers doc:name="Get Employees from Workday Human Resource"	config-ref="WorkdayHumanResource" />
+
 			</processor-chain>
 		</poll>
-        <expression-filter expression="#[payload.size() &gt; 0]" doc:name="Filter empty result set"/>
 
+		<set-variable doc:name="Set updatedThrough" value="#[payload.requestCriteria.transactionLogCriteriaData[0].transactionDateRangeData.updatedThrough]" variableName="updatedThrough" />
 
-        <flow-ref name="mainFlow" doc:description="deactiviationFlow"  doc:name="mainFlow"/>
-    </flow>
+		<dw:transform-message doc:name="Transform Workday employees to map of values for deactivation in Salesforce">
+			<dw:set-payload>
+				<![CDATA[%dw 1.0 
+%input payload application/java 
+%output application/java 
+---
+payload.responseData.worker map { 
+	Email: $.workerData.personalData.contactData.emailAddressData.emailAddress, 
+	Terminated: $.workerData.employmentData.workerStatusData.terminated
+} unless (payload.responseData is :null) otherwise []]]>
+			</dw:set-payload>
+		</dw:transform-message>
+		<logger doc:name="Logger" level="INFO" message="#[payload]" />
+
+		<expression-filter doc:name="Filter empty result set" expression="#[payload.size() >0]" />
+		<flow-ref doc:name="Call mainFlow" name="mainFlow" doc:description="deactiviationFlow" />
+	</flow>
 </mule>
