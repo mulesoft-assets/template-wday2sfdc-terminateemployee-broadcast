@@ -22,7 +22,7 @@ import org.mule.context.notification.NotificationException;
  */
 public class BusinessLogicIT extends AbstractTemplateTestCase {
 
-    private static final long TIMEOUT_MILLIS = 60000;
+    private static final long TIMEOUT_MILLIS = 180 *1000;
     private static final long DELAY_MILLIS = 500;
     private BatchTestHelper helper;
 
@@ -30,7 +30,7 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
     public static void beforeTestClass() {
         System.setProperty("poll.startDelayMillis", "8000");
         System.setProperty("poll.frequencyMillis", "30000");
-        Date initialDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 168);
+        Date initialDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 100);
         Calendar cal = Calendar.getInstance();
         cal.setTime(initialDate);
         System.setProperty(
@@ -56,7 +56,6 @@ public class BusinessLogicIT extends AbstractTemplateTestCase {
         muleContext.registerListener(pipelineListener);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testMainFlow() throws Exception {
         runSchedulersOnce(POLL_FLOW_NAME);

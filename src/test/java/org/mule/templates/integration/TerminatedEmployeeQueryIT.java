@@ -33,7 +33,7 @@ import com.workday.hr.WorkerType;
  */
 public class TerminatedEmployeeQueryIT extends AbstractTemplateTestCase {
 
-    private static final Logger log = LogManager.getLogger(TerminatedEmployeeQueryIT.class);
+    private static final Logger LOG = LogManager.getLogger(TerminatedEmployeeQueryIT.class);
 
     private InterceptingChainLifecycleWrapper queryEmployeeFromWorkdayFlow;
 
@@ -90,7 +90,7 @@ public class TerminatedEmployeeQueryIT extends AbstractTemplateTestCase {
         if (response.getResponseData() != null) {
             List<WorkerType> workers = response.getResponseData().getWorker();
             assertFalse("The response data should not be empty", workers.isEmpty());
-            log.info("workers.size() = " + workers.size());
+            LOG.info("workers.size() = " + workers.size());
         }
     }
 
