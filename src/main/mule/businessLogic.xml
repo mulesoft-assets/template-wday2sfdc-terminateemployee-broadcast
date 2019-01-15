@@ -20,7 +20,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 }]]]></salesforce:parameters>
                     </salesforce:query-single>
                 </batch:step>
-                <batch:step name="foreachEmployeeInWorkdayUpsertEmployeeInSalesforceStep" doc:id="78a74ab4-9b91-416d-985a-acda2ac377eb" acceptExpression="sizeOf(payload) &gt; 0">
+                <batch:step name="foreachEmployeeInWorkdayUpsertEmployeeInSalesforceStep" doc:id="78a74ab4-9b91-416d-985a-acda2ac377eb" acceptExpression="not isEmpty(payload)">
                     <batch:aggregator doc:name="Batch Aggregator" doc:id="1ad86a98-643e-494a-a90a-32daab0b03cc" size="${page.size}">
                         <logger level="INFO" doc:name="Log Users to deactivate" doc:id="7236a9f6-7aaf-4f40-94e3-e477a132e88d" message="Users to deactivate: #[output application/json --- payload]" />
                         <salesforce:update type="User" doc:name="Deactivate Users in Salesforce" doc:id="2853c4ab-5904-4483-8560-a7387cf2db91" config-ref="Salesforce_Sfdc_config" />
@@ -57,4 +57,4 @@ output text/plain
             </batch:on-complete>
         </batch:job>
     </flow>
-</mule>       
+</mule>
