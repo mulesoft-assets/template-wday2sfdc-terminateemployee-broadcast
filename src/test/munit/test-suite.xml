@@ -127,9 +127,9 @@ vars.SFDCUserToBroadcast]]></ee:set-payload>
 		
 </munit:execution>
 		<munit:validation>
-			<munit-tools:assert-that doc:name="Assert that user's first name has changed"
+			<munit-tools:assert-that doc:name="Assert that user is not active"
 				doc:id="517aaf5c-ab0d-4eb1-bb4d-5dddc6f1a305" expression='#[vars.broadcastedSFDCUser.IsActive as Boolean]'
-				is="#[MunitTools::equalTo(false)]" message="isAcite name should be false" />
+				is="#[MunitTools::equalTo(false)]" message="isActive should be false" />
 		</munit:validation>
 	</munit:test>
 	<munit:after-test name="test-suiteAfter_Test"
