@@ -1,0 +1,30 @@
+{
+  "configs": [
+    "config.xml",
+    "businessLogic.xml",
+    "endpoints.xml",
+    "errorHandling.xml"
+  ],
+  "secureProperties": [],
+  "redeploymentEnabled": true,
+  "name": "org.mule.templates:template-wday2sfdc-terminateemployee-broadcast:2.1.0-SNAPSHOT",
+  "minMuleVersion": "4.1.4",
+  "requiredProduct": "MULE_EE",
+  "classLoaderModelLoaderDescriptor": {
+    "id": "mule",
+    "attributes": {
+      "exportedPackages": [],
+      "exportedResources": [
+        "log4j2.xml",
+        "common.properties",
+        "mule.dev.properties",
+        "mule.qa.properties",
+        "mule.prod.properties"
+      ]
+    }
+  },
+  "bundleDescriptorLoader": {
+    "id": "mule",
+    "attributes": {}
+  }
+}

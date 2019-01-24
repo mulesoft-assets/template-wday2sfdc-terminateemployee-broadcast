@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "artifactCoordinates": {
+    "groupId": "org.mule.templates",
+    "artifactId": "template-wday2sfdc-terminateemployee-broadcast",
+    "version": "2.1.0-SNAPSHOT",
+    "type": "jar",
+    "classifier": "mule-application"
+  },
+  "dependencies": [
+    {
+      "artifactCoordinates": {
+        "groupId": "com.mulesoft.connectors",
+        "artifactId": "mule-salesforce-connector",
+        "version": "9.4.6",
+        "type": "jar",
+        "classifier": "mule-plugin"
+      },
+      "uri": "repository/com/mulesoft/connectors/mule-salesforce-connector/9.4.6/mule-salesforce-connector-9.4.6-mule-plugin.jar"
+    },
+    {
+      "artifactCoordinates": {
+        "groupId": "org.mule.connectors",
+        "artifactId": "mule-objectstore-connector",
+        "version": "1.1.1",
+        "type": "jar",
+        "classifier": "mule-plugin"
+      },
+      "uri": "repository/org/mule/connectors/mule-objectstore-connector/1.1.1/mule-objectstore-connector-1.1.1-mule-plugin.jar"
+    },
+    {
+      "artifactCoordinates": {
+        "groupId": "com.mulesoft.connectors",
+        "artifactId": "mule-workday-connector",
+        "version": "10.0.0",
+        "type": "jar",
+        "classifier": "mule-plugin"
+      },
+      "uri": "repository/com/mulesoft/connectors/mule-workday-connector/10.0.0/mule-workday-connector-10.0.0-mule-plugin.jar"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:workday="http://www.mulesoft.org/schema/mule/workday" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+    xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/workday http://www.mulesoft.org/schema/mule/workday/current/mule-workday.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+
+    <global-property name="mule.env" value="dev" doc:name="Global Property" />
+
+    <configuration-properties doc:name="Configuration properties" doc:id="264af40b-ecb3-4d39-b813-e63a5d202bcb" file="common.properties" />
+    <configuration-properties doc:name="Configuration properties" doc:id="baba8aa9-c40f-4bcc-9467-af01e23c26fb" file="mule.${mule.env}.properties" />
+
+    <os:object-store name="watermarkStore" doc:name="Object store" persistent="false" />
+
+    <workday:config-version-30-config name="Workday_Config" doc:name="Workday Config version 30" doc:id="8b83cb0d-18ef-4d5a-8270-4789015c1eaa">
+        <workday:basic-authentication-api-v30-connection username="${wday.username}" password="${wday.password}" tenantName="${wday.tenant}"
+            hostName="${wday.host}" responseTimeout="25000" />
+    </workday:config-version-30-config>
+
+    <salesforce:sfdc-config name="Salesforce_Sfdc_config" doc:id="71a055cd-1ff7-4124-9972-d44302b91a5b" doc:name="Salesforce Sfdc config">
+        <salesforce:basic-connection password="${sfdc.password}" securityToken="${sfdc.securityToken}" username="${sfdc.username}" />
+    </salesforce:sfdc-config>
+</mule>       

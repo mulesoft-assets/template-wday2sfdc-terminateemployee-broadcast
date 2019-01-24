@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "artifactCoordinates": {
+    "groupId": "com.mulesoft.connectors",
+    "artifactId": "mule-workday-connector",
+    "version": "10.0.0",
+    "type": "jar",
+    "classifier": "mule-plugin"
+  },
+  "dependencies": [
+    {
+      "artifactCoordinates": {
+        "groupId": "commons-io",
+        "artifactId": "commons-io",
+        "version": "2.5",
+        "type": "jar"
+      },
+      "uri": "repository/commons-io/commons-io/2.5/commons-io-2.5.jar"
+    },
+    {
+      "artifactCoordinates": {
+        "groupId": "org.jsoup",
+        "artifactId": "jsoup",
+        "version": "1.8.3",
+        "type": "jar"
+      },
+      "uri": "repository/org/jsoup/jsoup/1.8.3/jsoup-1.8.3.jar"
+    },
+    {
+      "artifactCoordinates": {
+        "groupId": "com.mulesoft.connectors",
+        "artifactId": "mule-connector-commons",
+        "version": "2.0.0",
+        "type": "jar"
+      },
+      "uri": "repository/com/mulesoft/connectors/mule-connector-commons/2.0.0/mule-connector-commons-2.0.0.jar"
+    },
+    {
+      "artifactCoordinates": {
+        "groupId": "org.mule.commons",
+        "artifactId": "atlantic",
+        "version": "2.0.0",
+        "type": "jar"
+      },
+      "uri": "repository/org/mule/commons/atlantic/2.0.0/atlantic-2.0.0.jar"
+    }
+  ]
+}
