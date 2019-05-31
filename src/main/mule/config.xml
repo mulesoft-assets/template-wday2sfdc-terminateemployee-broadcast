@@ -16,10 +16,10 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 
     <workday:config-version-30-config name="Workday_Config" doc:name="Workday Config version 30" doc:id="8b83cb0d-18ef-4d5a-8270-4789015c1eaa">
         <workday:basic-authentication-api-v30-connection username="${wday.username}" password="${wday.password}" tenantName="${wday.tenant}"
-            hostName="${wday.host}" responseTimeout="25000" />
+            hostName="${wday.host}" responseTimeout="${wday.responseTimeout}" />
     </workday:config-version-30-config>
 
     <salesforce:sfdc-config name="Salesforce_Sfdc_config" doc:id="71a055cd-1ff7-4124-9972-d44302b91a5b" doc:name="Salesforce Sfdc config">
         <salesforce:basic-connection password="${sfdc.password}" securityToken="${sfdc.securityToken}" username="${sfdc.username}" />
     </salesforce:sfdc-config>
-</mule>       
+</mule>
