@@ -99,4 +99,4 @@
             <layout>default</layout>
         </repository>
     </repositories>
-</project>
+<scm><connection>scm:git:git@github.com:mulesoft/template-wday2sfdc-terminateemployee-broadcast.git</connection><developerConnection>scm:git:git@github.com:mulesoft/template-wday2sfdc-terminateemployee-broadcast.git</developerConnection><url>https://github.com/mulesoft/template-wday2sfdc-terminateemployee-broadcast</url><tag>HEAD</tag></scm></project>
